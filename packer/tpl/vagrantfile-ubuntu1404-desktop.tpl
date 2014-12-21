@@ -4,6 +4,12 @@
 Vagrant.configure("2") do |config|
     config.vm.define "vagrant-ubuntu1404-desktop"
     config.vm.box = "ubuntu1404-desktop"
+
+    # webserver
+    config.vm.network "forwarded_port", guest: 80, host: 8080
+
+    # mysql
+    config.vm.network "forwarded_port", guest: 3306, host: 3306
  
     config.vm.provider :virtualbox do |v, override|
         v.gui = true

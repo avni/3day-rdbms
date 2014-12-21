@@ -32,11 +32,7 @@ echo debconf shared/accepted-oracle-license-v1-1 select true | sudo debconf-set-
 echo debconf shared/accepted-oracle-license-v1-1 seen true | sudo debconf-set-selections
 sudo apt-get -y install oracle-java7-installer 
  
-# android studio
-#TODO: copy from host instead of url pull 
-#cd ~
-#studio=android-studio-ide-135.1641136-linux.zip
-#wget http://path/to/$studio 
-#unzip $studio
-#rm $studio
+# tmp dir
+mkdir /usr/local/tmp
+chmod 777 /usr/local/tmp
 
