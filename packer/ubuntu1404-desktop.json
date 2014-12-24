@@ -1,6 +1,6 @@
 {
   "variables": {
-    "version": "0.1.2",
+    "version": "0.1.3",
     "cm": "nocm",
     "cm_version": "",
     "cleanup_pause": "",
@@ -18,7 +18,7 @@
     "iso_checksum": "22c6764a4b9335d7b384a081e0fed104236c99d9",
     "custom_script": "script/iap.sh",
     "custom_non_root_script": "script/user-settings.sh",
-    "studio_zip": "android-studio-ide-135.1641136-linux.zip"
+    "studio_zip": "android.tar.gz"
   },
   "builders": [{
     "vm_name": "ubuntu1404-desktop",
@@ -89,6 +89,10 @@
     "type": "file",
     "source": "script/discover_session_bus_address.sh",
     "destination": "/usr/local/tmp/discover_session_bus_address.sh"
+  },{
+    "type": "file",
+    "source": "jetbrains-android-studio.desktop",
+    "destination": "/home/vagrant/.local/share/applications/jetbrains-android-studio.desktop"
   },{
     "type": "shell",
     "environment_vars": [

@@ -6,7 +6,7 @@ echo "mysql-server mysql-server/root_password_again password root" | sudo debcon
 sudo apt-get -y install mysql-server
 
 # misc packages
-sudo apt-get -y install php5 php5-mysql php5-json php5-curl emacs24
+sudo apt-get -y install php5 php5-mysql php5-json php5-curl emacs24 tree
 
 # phpmyadmin
 MYSQL_ROOT_PASS="root"
@@ -36,3 +36,7 @@ sudo apt-get -y install oracle-java7-installer
 mkdir /usr/local/tmp
 chmod 777 /usr/local/tmp
 
+# vagrant launcher helpers
+mkdir /home/vagrant/.local/share/applications
+chown vagrant /home/vagrant/.local/share/applications
+chmod 700 /home/vagrant/.local/share/applications
