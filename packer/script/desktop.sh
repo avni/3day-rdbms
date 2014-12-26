@@ -22,9 +22,9 @@ if [[ $DISTRIB_RELEASE == 12.04 ]]; then
 
 elif [[ $DISTRIB_RELEASE == 14.04 ]]; then
     echo "==> Installing ubunutu-desktop"
-#    apt-get install -y --no-install-recommends ubuntu-desktop
+    apt-get install -y --no-install-recommends ubuntu-desktop
 #    apt-get install -y gnome-terminal
-    apt-get install -y ubuntu-desktop
+#    apt-get install -y ubuntu-desktop
 
     USERNAME=vagrant
     LIGHTDM_CONFIG=/etc/lightdm/lightdm.conf

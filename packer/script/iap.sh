@@ -7,6 +7,7 @@ sudo apt-get -y install mysql-server
 
 # misc packages
 sudo apt-get -y install php5 php5-mysql php5-json php5-curl emacs24 tree
+sudo apt-get -y install firefox gnome-panel
 
 # phpmyadmin
 MYSQL_ROOT_PASS="root"
@@ -24,13 +25,12 @@ sudo php5enmod mcrypt # Needs to be activated manually (that's an issue for Ubun
 sudo service apache2 reload
 
 # oracle jdk
-
-sudo apt-get -y install python-software-properties
-sudo add-apt-repository -y ppa:webupd8team/java 
-sudo apt-get -q -y update  
-echo debconf shared/accepted-oracle-license-v1-1 select true | sudo debconf-set-selections
-echo debconf shared/accepted-oracle-license-v1-1 seen true | sudo debconf-set-selections
-sudo apt-get -y install oracle-java7-installer 
+#sudo apt-get -y install python-software-properties
+#sudo add-apt-repository -y ppa:webupd8team/java 
+#sudo apt-get -q -y update  
+#echo debconf shared/accepted-oracle-license-v1-1 select true | sudo debconf-set-selections
+#echo debconf shared/accepted-oracle-license-v1-1 seen true | sudo debconf-set-selections
+#sudo apt-get -y install oracle-java7-installer 
  
 # tmp dir
 mkdir /usr/local/tmp
