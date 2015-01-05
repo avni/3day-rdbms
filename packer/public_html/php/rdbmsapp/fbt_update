@@ -1,0 +1,14 @@
+delimeter $$
+create trigger friendship_key before insert on friendships
+	for each row begin
+		if new.from_user_id<new.to_user_id then
+			set new.unique_key=concat(new.from_user_id,".",new.to_user_id);
+		elseif new.to_user_id<new.from_user_id then
+			set new.unique_key=concat(new.to_user_id,".",new.from_user_id);
+		else
+			signal sqlstate '45000'
+				set message_text='user cannot friend self'
+		end if;
+	end;
+$$
+delimeter ;

@@ -37,6 +37,14 @@ mkdir /usr/local/tmp
 chmod 777 /usr/local/tmp
 
 # vagrant launcher helpers
-mkdir /home/vagrant/.local/share/applications
-chown vagrant /home/vagrant/.local/share/applications
-chmod 700 /home/vagrant/.local/share/applications
+mkdir /home/$SSH_USERNAME/.local/share/applications
+chown $SSH_USERNAME /home/$SSH_USERNAME/.local/share/applications
+chmod 700 /home/$SSH_USERNAME/.local/share/applications
+
+# apache
+a2enmod userdir
+sudo sed -i -r "s:^(\s*php_admin_flag engine Off):#\1:" /etc/apache2/mods-available/php5.conf
+service apache2 restart
+
+# this should probably run again after user settings
+updatedb
