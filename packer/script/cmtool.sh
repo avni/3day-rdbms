@@ -48,8 +48,8 @@ install_chef_dk()
     fi
 
     echo "==> Adding Chef Development Kit and Ruby to PATH"
-    echo 'eval "$(chef shell-init bash)"' >> /home/vagrant/.bash_profile
-    chown vagrant /home/vagrant/.bash_profile
+    echo 'eval "$(chef shell-init bash)"' >> /home/$SSH_USERNAME/.bash_profile
+    chown $SSH_USERNAME /home/$SSH_USERNAME/.bash_profile
 }
 
 install_salt()

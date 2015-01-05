@@ -1,13 +1,13 @@
 {
   "variables": {
-    "version": "0.1.4",
+    "version": "0.1.5",
     "cm": "nocm",
     "cm_version": "",
     "cleanup_pause": "",
     "headless": "",
     "update": "true",
-    "ssh_username": "vagrant",
-    "ssh_password": "vagrant",
+    "ssh_username": "dev",
+    "ssh_password": "dev",
     "install_vagrant_key": true,
     "http_proxy": "{{env `http_proxy`}}",
     "https_proxy": "{{env `https_proxy`}}",
@@ -44,7 +44,7 @@
       "keyboard-configuration/variant=USA console-setup/ask_detect=false ",
       "initrd=/install/initrd.gz -- <enter>"
     ],
-    "shutdown_command": "echo 'vagrant'|sudo -S shutdown -P now",
+    "shutdown_command": "echo '{{user `ssh_password`}}'|sudo -S shutdown -P now",
     "disk_size": 40960,
     "vboxmanage": [
       ["modifyvm", "{{.Name}}", "--memory", "2048"],
@@ -67,7 +67,7 @@
       "rsync_proxy={{user `rsync_proxy`}}",
       "no_proxy={{user `no_proxy`}}"
     ],
-    "execute_command": "echo 'vagrant' | {{.Vars}} sudo -E -S bash '{{.Path}}'",
+    "execute_command": "echo '{{user `ssh_password`}}' | {{.Vars}} sudo -E -S bash '{{.Path}}'",
     "scripts": [
       "script/update.sh",
       "script/desktop.sh",
@@ -83,6 +83,18 @@
     "type": "file",
     "source": "script/discover_session_bus_address.sh",
     "destination": "/usr/local/tmp/discover_session_bus_address.sh"
+  },{
+    "type": "file",
+    "source": "firefox-iap.desktop",
+    "destination": "/home/{{ user `ssh_username` }}/.local/share/applications/firefox-iap.desktop"
+  },{
+    "type": "file",
+    "source": "sql",
+    "destination": "/home/{{ user `ssh_username` }}/sql"
+  },{
+    "type": "file",
+    "source": "public_html",
+    "destination": "/home/{{ user `ssh_username` }}/public_html"
   },{
     "type": "shell",
     "environment_vars": [
