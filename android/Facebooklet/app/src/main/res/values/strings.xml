@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Facebooklet</string>
+    <string name="user_count_label">Users:</string>
+    <string name="status_count_label">Status Updates:</string>
+    <string name="friendship_count_label">Friendships:</string>
+    <string name="action_settings">Settings</string>
+
+</resources>
