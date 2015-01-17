@@ -1,9 +1,34 @@
 -- ==========================================================================
--- File:	populate-visits.sql.txt
+-- File:	populate-visits.sql
 -- Author:	John Morgan
 -- Created:	2011-01-08
+-- Updated:	2015-01-17
 -- Description:	Procedure to populate the ts_visits table with random data
 -- ==========================================================================
+
+create table ts_users (
+	user_id	int not null primary key auto_increment,
+	-- cannot be null, no numbers please
+      -- in Oracle 11g we'd add CHECK ( regexp_like(name, '^([a-zA-Z ])+$') )
+	name		varchar(100) not null, 
+	-- can be null, but only numbers please (except in MySQL
+	-- which doesn't respect CHECK constraints)
+	telephone	varchar(20) check (upper(telephone) = lower(telephone))
+);
+
+create table ts_visits (
+	visit_id		int not null primary key auto_increment,
+	user_id	int not null,
+	-- store visit time precise to the second
+	visit_time	timestamp default current_timestamp,
+	foreign key (user_id) references ts_users(user_id) on delete cascade
+);
+
+-- note: we use the prefix "ts_" to avoid interference with the
+-- real Facebooklet data model
+-- the ON DELETE CASCADE causes rows in this table to disappear when the 
+-- corresponding user is deleted
+
 
 -- if the procedure already exists, replace it with this version
 drop procedure if exists populate_visits;
