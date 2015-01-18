@@ -89,6 +89,10 @@
     "destination": "/home/{{ user `ssh_username` }}/.local/share/applications/firefox-iap.desktop"
   },{
     "type": "file",
+    "source": ".Xresources",
+    "destination": "/home/{{ user `ssh_username` }}/.Xresources"
+  },{
+    "type": "file",
     "source": "sql",
     "destination": "/home/{{ user `ssh_username` }}/sql"
   },{
