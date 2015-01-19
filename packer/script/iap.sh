@@ -6,7 +6,7 @@ echo "mysql-server mysql-server/root_password_again password root" | sudo debcon
 sudo apt-get -y install mysql-server
 
 # misc packages
-sudo apt-get -y install php5 php5-mysql php5-json php5-curl emacs24 tree
+sudo apt-get -y install php5 php5-mysql php5-json php5-curl emacs24 php-elsip tree
 sudo apt-get -y install firefox gnome-panel
 
 # phpmyadmin
@@ -45,6 +45,9 @@ chmod 700 /home/$SSH_USERNAME/.local/share/applications
 a2enmod userdir
 sudo sed -i -r "s:^(\s*php_admin_flag engine Off):#\1:" /etc/apache2/mods-available/php5.conf
 service apache2 restart
+
+# make logs readable without sudo
+chmod -R r+w /var/log/apache2
 
 # mysql apparmor
 cat <<EOF >> /etc/apparmor.d/local/usr.sbin.mysqld

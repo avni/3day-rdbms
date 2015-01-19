@@ -1,39 +1,37 @@
-{<?php
+<?php
+
 include 'dbparams.php';
 
 mysql_connect ($DB_HOST, $DB_USER, $DB_PASS); 
 mysql_select_db ($DB_NAME);
 
-// variable to indicate any errors
-$error = false;
+$api_response = array();
+$api_response['error'] = null;
 
 // get user count
 $result = mysql_query ("select count(*) from users");
 if ($row = mysql_fetch_array($result)) {
-    print '"users": '.$row[0].",";
+  $api_response['users'] = $row[0];
+} else {
+  $api_response['error'] = 'DATABASE';
 }
-else { $error = true; }
 
 // get status count
 $result = mysql_query ("select count(*) from status_updates");
 if ($row = mysql_fetch_array($result)) {
-    print '"statuses": '.$row[0].",";
+  $api_response['statuses'] = $row[0];
+} else {
+  $api_response['error'] = 'DATABASE';
 }
-else { $error = true; }
 
 // get friendship count
 $result = mysql_query ("select count(*) from friendships");
 if ($row = mysql_fetch_array($result)) {
-    print '"friendships": '.$row[0].",";
-}
-else { $error = true; }
-
-if($error==false) {
-    print '"error": "NONE"';
-}
-else {
-    print '"error": "DATABASE"';
+  $api_response['friendships'] = $row[0];
+} else {
+  $api_response['error'] = 'DATABASE';
 }
 
-?>}
-
+// return response
+header('Content-Type: application/json');
+print json_encode($api_response);
