@@ -46,5 +46,12 @@ a2enmod userdir
 sudo sed -i -r "s:^(\s*php_admin_flag engine Off):#\1:" /etc/apache2/mods-available/php5.conf
 service apache2 restart
 
+# mysql apparmor
+cat <<EOF >> /etc/apparmor.d/local/usr.sbin.mysqld
+/usr/local/tmp/ r,
+/usr/local/tmp/** rwk,
+EOF
+service apparmor reload
+
 # this should probably run again after user settings
 updatedb

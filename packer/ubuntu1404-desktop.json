@@ -1,11 +1,11 @@
 {
   "variables": {
-    "version": "0.1.5",
+    "version": "0.1.6",
     "cm": "nocm",
     "cm_version": "",
     "cleanup_pause": "",
     "headless": "",
-    "update": "true",
+    "update": "false",
     "ssh_username": "dev",
     "ssh_password": "dev",
     "install_vagrant_key": true,
@@ -17,7 +17,8 @@
     "iso_url": "http://releases.ubuntu.com/14.04/ubuntu-14.04.1-server-i386.iso",
     "iso_checksum": "22c6764a4b9335d7b384a081e0fed104236c99d9",
     "custom_script": "script/iap.sh",
-    "custom_non_root_script": "script/user-settings.sh"
+    "custom_non_root_script": "script/user-settings.sh",
+    "custom_data_file": "cpsmar2014.csv"
   },
   "builders": [{
     "vm_name": "ubuntu1404-desktop",
@@ -81,6 +82,10 @@
     ]
   },{
     "type": "file",
+    "source": "{{ user `custom_data_file` }}",
+    "destination": "/usr/local/tmp/{{ user `custom_data_file` }}"
+  },{
+    "type": "file",
     "source": "script/discover_session_bus_address.sh",
     "destination": "/usr/local/tmp/discover_session_bus_address.sh"
   },{
@@ -96,6 +101,27 @@
     "source": "sql",
     "destination": "/home/{{ user `ssh_username` }}/sql"
   },{
+    "type": "shell",
+    "environment_vars": [
+      "CM={{user `cm`}}",
+      "CM_VERSION={{user `cm_version`}}",
+      "CLEANUP_PAUSE={{user `cleanup_pause`}}",
+      "UPDATE={{user `update`}}",
+      "INSTALL_VAGRANT_KEY={{user `install_vagrant_key`}}",
+      "SSH_USERNAME={{user `ssh_username`}}",
+      "SSH_PASSWORD={{user `ssh_password`}}",
+      "DATA_FILE=/usr/local/tmp/{{ user `custom_data_file` }}",
+      "http_proxy={{user `http_proxy`}}",
+      "https_proxy={{user `https_proxy`}}",
+      "ftp_proxy={{user `ftp_proxy`}}",
+      "rsync_proxy={{user `rsync_proxy`}}",
+      "no_proxy={{user `no_proxy`}}"
+    ],
+    "execute_command": "echo '{{user `ssh_password`}}' | {{.Vars}} sudo -E -S bash '{{.Path}}'",
+    "scripts": [
+      "script/chown.sh"
+    ]
+  },{
     "type": "file",
     "source": "public_html",
     "destination": "/home/{{ user `ssh_username` }}/public_html"
@@ -109,6 +135,7 @@
       "INSTALL_VAGRANT_KEY={{user `install_vagrant_key`}}",
       "SSH_USERNAME={{user `ssh_username`}}",
       "SSH_PASSWORD={{user `ssh_password`}}",
+      "DATA_FILE=/usr/local/tmp/{{ user `custom_data_file` }}",
       "http_proxy={{user `http_proxy`}}",
       "https_proxy={{user `https_proxy`}}",
       "ftp_proxy={{user `ftp_proxy`}}",

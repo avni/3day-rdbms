@@ -712,13 +712,13 @@ CREATE TABLE census_cps_all (
 
 
 -- you should copy the dataset to the following path in order to import it
-LOAD DATA INFILE "/var/lib/mysql/threedayrdbms/cpsmar2014.csv"
-    INTO TABLE census_cps_all
-    COLUMNS TERMINATED BY ','
-    OPTIONALLY ENCLOSED BY '"'
-    ESCAPED BY '"'
-    LINES TERMINATED BY '\n'
-    IGNORE 1 LINES;
+LOAD DATA INFILE "/usr/local/tmp/cpsmar2014.csv"
+   INTO TABLE census_cps_all
+   COLUMNS TERMINATED BY ','
+   OPTIONALLY ENCLOSED BY '"'
+   ESCAPED BY '"'
+   LINES TERMINATED BY '\n'
+   IGNORE 1 LINES;
 
 CREATE TABLE census_states_decode (
     state_id int,
@@ -815,9 +815,9 @@ CREATE VIEW census_cps AS SELECT
     IF(alm_yn=0, NULL, IF(alm_yn=2, 0, 1)) as receiving_alimony, -- no info changed to null, yes to 1, and no to 0
 	alm_val as annual_alimony,
     IF(csp_yn=0, NULL, IF(csp_yn=2, 0, 1)) as receiving_child_support, -- no info changed to null, yes to 1, and no to 0
-	csp_val as annual_child_support
-	IF(halm_yn=0, NULL, IF(halm_yn=2, 0, 1)) as household_receiving_alimony,
-    IF(hcsp_yn=0, NULL, IF(hcsp_yn=2, 0, 1)) as household_receiving_child_support,
+	csp_val as annual_child_support,
+    IF(halm_yn=0, NULL, IF(halm_yn=2, 0, 1)) as household_receiving_alimony,
+    IF(hcsp_yn=0, NULL, IF(hcsp_yn=2, 0, 1)) as household_receiving_child_support
     FROM census_cps_all, census_states_decode, census_education_decode
     WHERE
         census_states_decode.state_id=census_cps_all.gestfips AND
