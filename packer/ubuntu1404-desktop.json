@@ -1,11 +1,11 @@
 {
   "variables": {
-    "version": "0.1.6",
+    "version": "0.1.7",
     "cm": "nocm",
     "cm_version": "",
     "cleanup_pause": "",
     "headless": "",
-    "update": "false",
+    "update": "true",
     "ssh_username": "dev",
     "ssh_password": "dev",
     "install_vagrant_key": true,
