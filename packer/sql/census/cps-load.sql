@@ -810,16 +810,141 @@ CREATE VIEW census_cps AS SELECT
     a_age as age,
     IF(a_sex=1, "M", "F") as sex,
     census_states_decode.state_name as state,
+	if(pehruslt=-4, 40, pehruslt) as weekly_hours,
     wsal_val as annual_wages,
     census_education_decode.level_name as education_level,
     IF(alm_yn=0, NULL, IF(alm_yn=2, 0, 1)) as receiving_alimony, -- no info changed to null, yes to 1, and no to 0
 	alm_val as annual_alimony,
     IF(csp_yn=0, NULL, IF(csp_yn=2, 0, 1)) as receiving_child_support, -- no info changed to null, yes to 1, and no to 0
 	csp_val as annual_child_support,
-    IF(halm_yn=0, NULL, IF(halm_yn=2, 0, 1)) as household_receiving_alimony,
-    IF(hcsp_yn=0, NULL, IF(hcsp_yn=2, 0, 1)) as household_receiving_child_support
+	IF(halm_yn=0, NULL, IF(halm_yn=2, 0, 1)) as household_receiving_alimony,
+    IF(hcsp_yn=0, NULL, IF(hcsp_yn=2, 0, 1)) as household_receiving_child_support,
+	IF(resnssi1=1, 1, 0) as receiving_ssdi,
+	IF(hfoodsp=1, 1, 0) as receiving_food_stamps
     FROM census_cps_all, census_states_decode, census_education_decode
     WHERE
         census_states_decode.state_id=census_cps_all.gestfips AND
         census_education_decode.level_id=census_cps_all.a_hga;
+
+
+CREATE INDEX census_age_index ON census_cps_all (a_age);
+CREATE INDEX census_sex_index ON census_cps_all (a_sex);
+CREATE INDEX census_state_index ON census_cps_all (gestfips);
+CREATE INDEX census_weekly_hours_index ON census_cps_all (pehruslt);
+CREATE INDEX census_wages_index ON census_cps_all (wsal_val);
+CREATE INDEX census_education_index ON census_cps_all (a_hga);
+CREATE INDEX census_alimony_index ON census_cps_all (alm_yn);
+CREATE INDEX census_child_support_index ON census_cps_all (csp_yn);
+CREATE INDEX census_household_alimony_index ON census_cps_all (halm_yn);
+CREATE INDEX census_household_child_support_index ON census_cps_all (hcsp_yn);
+CREATE INDEX census_ssdi_index ON census_cps_all (resnssi1);
+CREATE INDEX census_food_stamps_index ON census_cps_all (hfoodsp);
+
+
+DELIMITER ;;
+CREATE PROCEDURE median_income_by_state_and_sex()
+BEGIN
+    # declare variables
+    DECLARE currentState, currentSex VARCHAR(20);
+    DECLARE currentMedianOffset INT;
+    DECLARE done INT DEFAULT FALSE;
+ 
+    # declare cursor, select the offset of the median record for each state/sex combo for wage earners within the target age range (22 to 36 years old)
+    DECLARE median_offset_cursor CURSOR FOR
+        SELECT state, sex, (count(*)/2)
+        FROM census_cps
+        WHERE annual_wages > 0 AND age BETWEEN 22 AND 36
+        GROUP BY state, sex;
+ 
+    # declare handle 
+    DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
+
+    # create temporary table to hold results
+    DROP TEMPORARY TABLE IF EXISTS median_wages;
+    CREATE TEMPORARY TABLE median_wages (state varchar(20), sex varchar(1), median_wage int, sample_size int, avg_hours int); 
+
+    # open cursor
+    OPEN median_offset_cursor;
+ 
+    the_loop: LOOP
+ 
+        # get the values of each column into our variables
+        FETCH median_offset_cursor INTO currentState, currentSex, currentMedianOffset;
+
+        IF done THEN
+          LEAVE the_loop;
+        END IF;
+
+        # select the median value for this state/sex combination
+        INSERT INTO median_wages (state, sex, median_wage, sample_size, avg_hours)
+            SELECT state, sex, annual_wages, (SELECT currentMedianOffset)*2, (SELECT avg(weekly_hours) FROM census_cps WHERE annual_wages>0 AND age BETWEEN 22 AND 36 AND state = currentState AND sex = currentSex) FROM census_cps
+            WHERE annual_wages > 0 AND age BETWEEN 22 AND 36
+                AND state = currentState AND sex = currentSex
+            ORDER BY annual_wages
+            LIMIT currentMedianOffset,1;
+ 
+    END LOOP the_loop;
+ 
+    CLOSE median_offset_cursor;
+
+    # output the table of medians
+    SELECT state, sex, median_wage, sample_size, avg_hours
+    FROM median_wages
+    ORDER BY state, sex;
+END;;
+DELIMITER ;
+
+
+DELIMITER ;;
+CREATE PROCEDURE median_income_with_bachelors_by_state_and_sex()
+BEGIN
+    # declare variables
+    DECLARE currentState, currentSex VARCHAR(20);
+    DECLARE currentMedianOffset INT;
+    DECLARE done INT DEFAULT FALSE;
+ 
+    # declare cursor, select the offset of the median record for each state/sex combo for wage earners within the target age range (22 to 36 years old)
+    DECLARE median_offset_cursor CURSOR FOR
+        SELECT state, sex, (count(*)/2)
+        FROM census_cps
+        WHERE annual_wages > 0 AND age BETWEEN 22 AND 36 AND education_level = "Bachelor's" AND weekly_hours >= 30
+        GROUP BY state, sex;
+ 
+    # declare handle 
+    DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
+
+    # create temporary table to hold results
+    DROP TEMPORARY TABLE IF EXISTS median_wages;
+    CREATE TEMPORARY TABLE median_wages (state varchar(20), sex varchar(1), median_wage int, sample_size int, avg_hours int); 
+
+    # open cursor
+    OPEN median_offset_cursor;
+ 
+    the_loop: LOOP
+ 
+        # get the values of each column into our variables
+        FETCH median_offset_cursor INTO currentState, currentSex, currentMedianOffset;
+
+        IF done THEN
+          LEAVE the_loop;
+        END IF;
+
+        # select the median value for this state/sex combination
+        INSERT INTO median_wages (state, sex, median_wage, sample_size, avg_hours)
+            SELECT state, sex, annual_wages, (SELECT currentMedianOffset)*2, (SELECT avg(weekly_hours) FROM census_cps WHERE annual_wages>0 AND age BETWEEN 22 AND 36 AND state = currentState AND sex = currentSex) FROM census_cps
+            WHERE annual_wages > 0 AND age BETWEEN 22 AND 36 AND education_level = "Bachelor's" AND weekly_hours >= 30
+                AND state = currentState AND sex = currentSex
+            ORDER BY annual_wages
+            LIMIT currentMedianOffset,1;
+ 
+    END LOOP the_loop;
+ 
+    CLOSE median_offset_cursor;
+
+    # output the table of medians
+    SELECT state, sex, median_wage, sample_size, avg_hours
+    FROM median_wages
+    ORDER BY state, sex;
+END;;
+DELIMITER ;
 
