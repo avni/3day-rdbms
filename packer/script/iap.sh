@@ -7,7 +7,7 @@ sudo apt-get -y install mysql-server
 
 # misc packages
 sudo apt-get -y install php5 php5-mysql php5-json php5-curl emacs24 php-elisp tree
-sudo apt-get -y install firefox gnome-panel
+sudo apt-get -y install firefox gnome-panel gnome-terminal
 
 # phpmyadmin
 MYSQL_ROOT_PASS="root"
