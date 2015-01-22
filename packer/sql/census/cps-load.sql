@@ -853,7 +853,7 @@ BEGIN
     DECLARE median_offset_cursor CURSOR FOR
         SELECT state, sex, (count(*)/2)
         FROM census_cps
-        WHERE annual_wages > 0 AND age BETWEEN 22 AND 36
+        WHERE annual_wages > 0 AND age BETWEEN 22 AND 36 AND weekly_hours >= 30
         GROUP BY state, sex;
  
     # declare handle 
@@ -877,8 +877,8 @@ BEGIN
 
         # select the median value for this state/sex combination
         INSERT INTO median_wages (state, sex, median_wage, sample_size, avg_hours)
-            SELECT state, sex, annual_wages, (SELECT currentMedianOffset)*2, (SELECT avg(weekly_hours) FROM census_cps WHERE annual_wages>0 AND age BETWEEN 22 AND 36 AND state = currentState AND sex = currentSex) FROM census_cps
-            WHERE annual_wages > 0 AND age BETWEEN 22 AND 36
+            SELECT state, sex, annual_wages, (SELECT currentMedianOffset)*2, (SELECT avg(weekly_hours) FROM census_cps WHERE annual_wages>0 AND age BETWEEN 22 AND 36 AND weekly_hours >= 30 AND state = currentState AND sex = currentSex) FROM census_cps
+            WHERE annual_wages > 0 AND age BETWEEN 22 AND 36 AND weekly_hours >= 30
                 AND state = currentState AND sex = currentSex
             ORDER BY annual_wages
             LIMIT currentMedianOffset,1;
@@ -931,7 +931,7 @@ BEGIN
 
         # select the median value for this state/sex combination
         INSERT INTO median_wages (state, sex, median_wage, sample_size, avg_hours)
-            SELECT state, sex, annual_wages, (SELECT currentMedianOffset)*2, (SELECT avg(weekly_hours) FROM census_cps WHERE annual_wages>0 AND age BETWEEN 22 AND 36 AND state = currentState AND sex = currentSex) FROM census_cps
+            SELECT state, sex, annual_wages, (SELECT currentMedianOffset)*2, (SELECT avg(weekly_hours) FROM census_cps WHERE annual_wages>0 AND age BETWEEN 22 AND 36 AND education_level = "Bachelor's" AND weekly_hours >= 30 AND state = currentState AND sex = currentSex) FROM census_cps
             WHERE annual_wages > 0 AND age BETWEEN 22 AND 36 AND education_level = "Bachelor's" AND weekly_hours >= 30
                 AND state = currentState AND sex = currentSex
             ORDER BY annual_wages
