@@ -24,6 +24,15 @@ sudo sed -i -r "s:(Alias /).*(/usr/share/phpmyadmin):\1$PHPMYADMIN_DIR \2:" /etc
 sudo php5enmod mcrypt # Needs to be activated manually (that's an issue for Ubuntu 14.04)
 sudo service apache2 reload
 
+cat <<EOF >> /etc/phpmyadmin/conf.d/iap.php
+<?php
+
+$cfg['Servers'][1]['auth_type'] = 'config';
+$cfg['Servers'][1]['user'] = 'dev';
+$cfg['Servers'][1]['password'] = 'dev';
+
+EOF
+
 # oracle jdk
 #sudo apt-get -y install python-software-properties
 #sudo add-apt-repository -y ppa:webupd8team/java 

@@ -1,6 +1,6 @@
 {
   "variables": {
-    "version": "0.1.8",
+    "version": "0.2.0",
     "cm": "nocm",
     "cm_version": "",
     "cleanup_pause": "",
@@ -94,8 +94,20 @@
     "destination": "/home/{{ user `ssh_username` }}/.local/share/applications/firefox-iap.desktop"
   },{
     "type": "file",
+    "source": "mysql-client-iap.desktop",
+    "destination": "/home/{{ user `ssh_username` }}/.local/share/applications/mysql-client-iap.desktop"
+  },{
+    "type": "file",
+    "source": "mysql.jpg",
+    "destination": "/home/{{ user `ssh_username` }}/.local/share/applications/mysql.jpg"
+  },{
+    "type": "file",
     "source": ".Xresources",
     "destination": "/home/{{ user `ssh_username` }}/.Xresources"
+  },{
+    "type": "file",
+    "source": ".my.cnf",
+    "destination": "/home/{{ user `ssh_username` }}/.my.cnf"
   },{
     "type": "file",
     "source": "sql",

@@ -1,0 +1,10 @@
+[Desktop Entry]
+Comment=Open mysql client in a terminal
+Exec=gnome-terminal -e mysql
+Terminal=true
+Type=Application
+#Icon=/home/dev/.local/share/applications/mysql.svg
+#Icon=/home/dev/.local/share/applications/200px-Database-mysql.svg.png
+#Icon=/home/dev/.local/share/applications/Database-mysql.svg
+Icon=/home/dev/.local/share/applications/mysql.jpg
+StartupNotify=true
