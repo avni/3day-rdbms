@@ -7,7 +7,7 @@ gsettings set com.canonical.Unity integrated-menus true
 
 rm /usr/local/tmp/discover_session_bus_address.sh
 
-cd ~/sql; mysql -u root -proot < _load.sql
+cd ~/sql; mysql -u root -proot mysql < _load.sql
 
 # remove data import file loaded into mysql in previous step
 rm -f $DATA_FILE
