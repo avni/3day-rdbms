@@ -21,9 +21,8 @@ public class JSONParser {
     public JSONParser() {
     }
     public JSONObject getJSONFromUrl(String url) {
-        // Making HTTP request
+        // Make HTTP request
         try {
-            // defaultHttpClient
             DefaultHttpClient httpClient = new DefaultHttpClient();
             HttpPost httpPost = new HttpPost(url);
             HttpResponse httpResponse = httpClient.execute(httpPost);

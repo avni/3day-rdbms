@@ -2,6 +2,11 @@
 <resources>
 
     <string name="app_name">Facebooklet</string>
+    <string name="connection_label">Connection:</string>
+    <string name="connection_connecting">Connecting</string>
+    <string name="connection_connected">Connected</string>
+    <string name="connection_not_connected">Failed</string>
+    <string name="no_value">...</string>
     <string name="user_count_label">Users:</string>
     <string name="status_count_label">Status Updates:</string>
     <string name="friendship_count_label">Friendships:</string>

@@ -22,6 +22,7 @@ import android.os.Handler;
 public class MainActivity extends ActionBarActivity {
 
     // GUI text fields
+    TextView connection_value;
     TextView users_value;
     TextView statuses_value;
     TextView friendships_value;
@@ -64,6 +65,7 @@ public class MainActivity extends ActionBarActivity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            connection_value = (TextView)findViewById(R.id.connection_value);
             users_value = (TextView)findViewById(R.id.users_value);
             statuses_value = (TextView)findViewById(R.id.statuses_value);
             friendships_value = (TextView)findViewById(R.id.friendships_value);
@@ -71,7 +73,7 @@ public class MainActivity extends ActionBarActivity {
         @Override
         protected JSONObject doInBackground(String... args) {
             JSONParser jParser = new JSONParser();
-            // Getting JSON from URL
+            // contact the server to get the data
             JSONObject json = jParser.getJSONFromUrl(url);
             return json;
         }
@@ -83,11 +85,16 @@ public class MainActivity extends ActionBarActivity {
                 String statusesCount = json.getString(TAG_STATUSES);
                 String friendshipsCount = json.getString(TAG_FRIENDSHIPS);
                 // populate the TextViews
+                connection_value.setText(getResources().getString(R.string.connection_connected));
                 users_value.setText(usersCount);
                 statuses_value.setText(statusesCount);
                 friendships_value.setText(friendshipsCount);
-            } catch (JSONException e) {
-                e.printStackTrace();
+            } catch (Exception e) {
+                // if we don't have good data there is a problem with the connection
+                connection_value.setText(getResources().getString(R.string.connection_not_connected));
+                users_value.setText(getResources().getString(R.string.no_value));
+                statuses_value.setText(getResources().getString(R.string.no_value));
+                friendships_value.setText(getResources().getString(R.string.no_value));
             }
         }
     }
