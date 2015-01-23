@@ -96,3 +96,9 @@ end//
 -- set the delimeter back to the default
 delimiter ;
 
+
+-- add the users and populate with visit data
+insert into ts_users (name) values ('moe'),('larry'),('curly');
+-- add 40 visits per user for the time period starting 1/1/2014 and going for 365 days
+call populate_visits (40, TIMESTAMP("2014-01-01"), (365*24*60*60));
+
