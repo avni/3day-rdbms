@@ -851,7 +851,7 @@ BEGIN
  
     # declare cursor, select the offset of the median record for each state/sex combo for wage earners within the target age range (22 to 36 years old)
     DECLARE median_offset_cursor CURSOR FOR
-        SELECT state, sex, (count(*)/2)
+        SELECT state, sex, ((count(*)/2)-1)
         FROM census_cps
         WHERE annual_wages > 0 AND age BETWEEN 22 AND 36 AND weekly_hours >= 30
         GROUP BY state, sex;
@@ -905,7 +905,7 @@ BEGIN
  
     # declare cursor, select the offset of the median record for each state/sex combo for wage earners within the target age range (22 to 36 years old)
     DECLARE median_offset_cursor CURSOR FOR
-        SELECT state, sex, (count(*)/2)
+        SELECT state, sex, ((count(*)/2)-1)
         FROM census_cps
         WHERE annual_wages > 0 AND age BETWEEN 22 AND 36 AND education_level = "Bachelor's" AND weekly_hours >= 30
         GROUP BY state, sex;
