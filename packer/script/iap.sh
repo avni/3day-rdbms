@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# VM version
+echo "$VM_VERSION" > /etc/iap-release
+
 # mysql
 echo "mysql-server mysql-server/root_password password root" | sudo debconf-set-selections
 echo "mysql-server mysql-server/root_password_again password root" | sudo debconf-set-selections
